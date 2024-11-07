@@ -18,3 +18,5 @@ This version is designed specifically for TurtleWoW and its custom changes.
 If you find any bugs, inaccuracies, typos or just want to suggest something, open an [issue](https://github.com/Otari98/BetterCharacterStats/issues) on GitHub 
 ## Thanks to original author and all contributors
 Moh, Bennylava, Lexie, Spit, Pepopo
+
+中文版由wind汉化，有问题请联系10939683@qq.com
