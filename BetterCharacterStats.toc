@@ -1,6 +1,6 @@
 ## Interface: 11200
 ## Title: |CFF33AAFFBetterCharacterStats |R角色属性 |cffff1450[1.01]|R
-## Author: moh, Bennylava, |cffbe5effLexie|r, Spit, Pepopo, wind汉化
+## Author: moh, Bennylava, |cffbe5effLexie|r, Spit, Pepopo, Wind&Sunelegy汉化
 ## Version: 1.12.6
 ## SavedVariablesPerCharacter: BCSConfig bcsupdateavailable BCScache
 

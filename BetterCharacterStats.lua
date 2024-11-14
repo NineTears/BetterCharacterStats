@@ -767,7 +767,7 @@ function BCS:SetMeleeCritChance(statFrame)
 	text:SetText(format("%.2f%%", BCS:GetCritChance()))
 
 	statFrame.tooltip = (L.MELEE_CRIT_TOOLTIP)
-	statFrame.tooltipSubtext = (L.MELEE_CRIT_TOOLTIP_SUB)
+	statFrame.tooltipSubtext = L.MELEE_CRIT_TOOLTIP_SUB
 
 	BCS:AddTooltip(statFrame)
 end
@@ -782,7 +782,7 @@ function BCS:SetWeaponSkill(statFrame)
 		text:SetText(format("%d", BCS:GetMHWeaponSkill()))
 	end
 	statFrame.tooltip = format(L.MELEE_WEAPON_SKILL_TOOLTIP)
-	statFrame.tooltipSubtext = format(L.MELEE_WEAPON_SKILL_TOOLTIP_SUB)
+	statFrame.tooltipSubtext = L.MELEE_WEAPON_SKILL_TOOLTIP_SUB
 	BCS:AddTooltip(statFrame)
 end
 
@@ -797,7 +797,7 @@ function BCS:SetRangedWeaponSkill(statFrame)
 	end
 	text:SetText(format("%d", BCS:GetRangedWeaponSkill()))
 	statFrame.tooltip = format(L.RANGED_WEAPON_SKILL_TOOLTIP)
-	statFrame.tooltipSubtext = format(L.RANGED_WEAPON_SKILL_TOOLTIP_SUB)
+	statFrame.tooltipSubtext = L.RANGED_WEAPON_SKILL_TOOLTIP_SUB
 	BCS:AddTooltip(statFrame)
 end
 
@@ -818,7 +818,7 @@ function BCS:SetBossMissChance(statFrame)
 	end
 
 	statFrame.tooltip = format(L.MELEE_MISS_VS_BOSS_TOOLTIP)
-	statFrame.tooltipSubtext = format(L.MELEE_MISS_VS_BOSS_TOOLTIP_SUB)
+	statFrame.tooltipSubtext = L.MELEE_MISS_VS_BOSS_TOOLTIP_SUB
 	BCS:AddTooltip(statFrame)
 end
 
@@ -836,7 +836,7 @@ function BCS:SetBossGlanceReduction(statFrame)
 	end
 
 	statFrame.tooltip = format(L.MELEE_GLANCE_VS_BOSS_TOOLTIP)
-	statFrame.tooltipSubtext = format(L.MELEE_GLANCE_VS_BOSS_TOOLTIP_SUB)
+	statFrame.tooltipSubtext = L.MELEE_GLANCE_VS_BOSS_TOOLTIP_SUB
 	BCS:AddTooltip(statFrame)
 end
 
@@ -853,7 +853,7 @@ function BCS:SetBossDodgeChance(statFrame)
 	end
 
 	statFrame.tooltip = format(L.MELEE_DODGE_VS_BOSS_TOOLTIP)
-	statFrame.tooltipSubtext = format(L.MELEE_DODGE_VS_BOSS_TOOLTIP_SUB)
+	statFrame.tooltipSubtext = L.MELEE_DODGE_VS_BOSS_TOOLTIP_SUB
 	BCS:AddTooltip(statFrame)
 end
 
@@ -871,7 +871,7 @@ function BCS:SetBossCritCap(statFrame)
 	end
 
 	statFrame.tooltip = format(L.MELEE_CRIT_CAP_VS_BOSS_TOOLTIP)
-	statFrame.tooltipSubtext = format(L.MELEE_CRIT_CAP_VS_BOSS_TOOLTIP_SUB)
+	statFrame.tooltipSubtext = L.MELEE_CRIT_CAP_VS_BOSS_TOOLTIP_SUB
 	BCS:AddTooltip(statFrame)
 end
 
@@ -891,7 +891,7 @@ function BCS:SetEffectiveBossCrit(statFrame)
 	end
 
 	statFrame.tooltip = format(L.MELEE_EFF_CRIT_VS_BOSS_TOOLTIP)
-	statFrame.tooltipSubtext = format(L.MELEE_EFF_CRIT_VS_BOSS_TOOLTIP_SUB)
+	statFrame.tooltipSubtext = L.MELEE_EFF_CRIT_VS_BOSS_TOOLTIP_SUB
 	BCS:AddTooltip(statFrame)
 end
 
@@ -1042,12 +1042,12 @@ function BCS:SetRangedCritChance(statFrame)
 	local skill = BCS:GetRangedWeaponSkill()
 	local level = UnitLevel("player")
 	-- apply skill difference modifier
-	local skillDiff = skill - (level * 5)
-	if (skill >= (level * 5)) then
+	--[[local skillDiff = skill - (level*5)
+	if (skill >= (level*5)) then
 		crit = crit + (skillDiff * 0.04)
 	else
 		crit = crit + (skillDiff * 0.2)
-	end
+	end]]
 	if crit < 0 then
 		crit = 0
 	end
@@ -1135,13 +1135,25 @@ function BCS:SetBlock(statFrame)
 	local frame = statFrame
 	local text = getglobal(statFrame:GetName() .. "StatText")
 	local label = getglobal(statFrame:GetName() .. "Label")
+	local blockChance = GetBlockChance()
 
 	label:SetText(L.BLOCK_COLON)
-	text:SetText(format("%.2f%%", GetBlockChance()))
+	text:SetText(format("%.2f%%", blockChance ))
 
 	frame.tooltip = format(L.PLAYER_BLOCK_TOOLTIP)
 	frame.tooltipSubtext = format(L.PLAYER_BLOCK_TOOLTIP_SUB)
-	BCS:AddTooltip(frame)
+	frame:SetScript("OnEnter", function()
+		GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+		GameTooltip:SetText(this.tooltip)
+		GameTooltip:AddLine(this.tooltipSubtext, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, 1)
+		if blockChance > 0 then
+			GameTooltip:AddLine("Block Value: "..BCS:GetBlockValue())
+		end
+		GameTooltip:Show()
+	end)
+	frame:SetScript("OnLeave", function()
+		GameTooltip:Hide()
+	end)
 end
 function BCS:SetTotalAvoidance(statFrame)
 	local frame = statFrame
