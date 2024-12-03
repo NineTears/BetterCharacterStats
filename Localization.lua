@@ -267,6 +267,12 @@ BCS["L"] = {
 	["Moonkin Aura"] = "Moonkin Aura",
 	["Inner Focus"] = "Inner Focus",
 	["Beast"] = "Beast",
+	["Equip: Improves your chance to get a critical strike with missile weapons by (%d)%%."] = "Equip: Improves your chance to get a critical strike with missile weapons by (%d)%%.",
+	["Increases your spell damage and the critical strike chance of your offensive spells by (%d+)%%"] = "Increases your spell damage and the critical strike chance of your offensive spells by (%d+)%%",
+	["Equip: Increases your spell damage by up to (%d+) and your healing by up to %d+."] = "Equip: Increases your spell damage by up to (%d+) and your healing by up to %d+.",
+	["Allows (%d+)%% of mana regeneration while casting."] = "Allows (%d+)%% of mana regeneration while casting.",
+	["increases block amount by (%d+)%%"] = "increases block amount by (%d+)%%",
+	["^Stoneskin"] = "^石肤",
 }
 elseif ( GetLocale() == "zhCN" ) then
 BCS["L"] = {
@@ -535,5 +541,12 @@ BCS["L"] = {
 	["Moonkin Aura"] = "枭兽光环",
 	["Inner Focus"] = "心灵专注",
 	["Beast"] = "野兽",
+	["Equip: Improves your chance to get a critical strike with missile weapons by (%d)%%."] = "Equip: Improves your chance to get a critical strike with missile weapons by (%d)%%.",
+	["Increases your spell damage and the critical strike chance of your offensive spells by (%d+)%%"] = "Increases your spell damage and the critical strike chance of your offensive spells by (%d+)%%",
+	["Equip: Increases your spell damage by up to (%d+) and your healing by up to %d+."] = "Equip: Increases your spell damage by up to (%d+) and your healing by up to %d+.",
+	["Allows (%d+)%% of mana regeneration while casting."] = "Allows (%d+)%% of mana regeneration while casting.",
+	["increases block amount by (%d+)%%"] = "increases block amount by (%d+)%%",
+	["^Stoneskin"] = "^石肤",
+
 }
 end

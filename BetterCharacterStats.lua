@@ -667,20 +667,21 @@ function BCS:SetSpellPower(statFrame, school)
 		end
 		frame.tooltipSubtext = format(L.SPELL_SCHOOL_TOOLTIP_SUB, strlower(school))
 	else
-		local power, secondaryPower, secondaryName = BCS:GetSpellPower()
+		local damageAndHealing, secondaryPower, secondaryName, damageOnly = BCS:GetSpellPower()
+		local total = damageAndHealing + damageOnly
 
 		label:SetText(L.SPELL_POWER_COLON)
 		if secondaryPower > 0 then
-			text:SetText(colorPos .. power + secondaryPower)
+			text:SetText(colorPos..total + secondaryPower)
 		else
-			text:SetText(power + secondaryPower)
+			text:SetText(total + secondaryPower)
 		end
 
 		if secondaryPower ~= 0 then
-			frame.tooltip = format(L.SPELL_POWER_SECONDARY_TOOLTIP, (power + secondaryPower), power, secondaryPower, secondaryName)
+			frame.tooltip = format(L.SPELL_POWER_SECONDARY_TOOLTIP, (total + secondaryPower), total, secondaryPower, secondaryName)
 			frame.tooltipSubtext = format(L.SPELL_POWER_SECONDARY_TOOLTIP_SUB)
 		else
-			frame.tooltip = format(L.SPELL_POWER_TOOLTIP, power)
+			frame.tooltip = format(L.SPELL_POWER_TOOLTIP, total)
 			frame.tooltipSubtext = format(L.SPELL_POWER_TOOLTIP_SUB)
 		end
 	end
@@ -767,7 +768,7 @@ function BCS:SetMeleeCritChance(statFrame)
 	text:SetText(format("%.2f%%", BCS:GetCritChance()))
 
 	statFrame.tooltip = (L.MELEE_CRIT_TOOLTIP)
-	statFrame.tooltipSubtext = L.MELEE_CRIT_TOOLTIP_SUB
+	statFrame.tooltipSubtext = (L.MELEE_CRIT_TOOLTIP_SUB)
 
 	BCS:AddTooltip(statFrame)
 end
@@ -782,7 +783,7 @@ function BCS:SetWeaponSkill(statFrame)
 		text:SetText(format("%d", BCS:GetMHWeaponSkill()))
 	end
 	statFrame.tooltip = format(L.MELEE_WEAPON_SKILL_TOOLTIP)
-	statFrame.tooltipSubtext = L.MELEE_WEAPON_SKILL_TOOLTIP_SUB
+	statFrame.tooltipSubtext = format(L.MELEE_WEAPON_SKILL_TOOLTIP_SUB)
 	BCS:AddTooltip(statFrame)
 end
 
@@ -797,7 +798,7 @@ function BCS:SetRangedWeaponSkill(statFrame)
 	end
 	text:SetText(format("%d", BCS:GetRangedWeaponSkill()))
 	statFrame.tooltip = format(L.RANGED_WEAPON_SKILL_TOOLTIP)
-	statFrame.tooltipSubtext = L.RANGED_WEAPON_SKILL_TOOLTIP_SUB
+	statFrame.tooltipSubtext = format(L.RANGED_WEAPON_SKILL_TOOLTIP_SUB)
 	BCS:AddTooltip(statFrame)
 end
 
@@ -818,7 +819,7 @@ function BCS:SetBossMissChance(statFrame)
 	end
 
 	statFrame.tooltip = format(L.MELEE_MISS_VS_BOSS_TOOLTIP)
-	statFrame.tooltipSubtext = L.MELEE_MISS_VS_BOSS_TOOLTIP_SUB
+	statFrame.tooltipSubtext = format(L.MELEE_MISS_VS_BOSS_TOOLTIP_SUB)
 	BCS:AddTooltip(statFrame)
 end
 
@@ -836,7 +837,7 @@ function BCS:SetBossGlanceReduction(statFrame)
 	end
 
 	statFrame.tooltip = format(L.MELEE_GLANCE_VS_BOSS_TOOLTIP)
-	statFrame.tooltipSubtext = L.MELEE_GLANCE_VS_BOSS_TOOLTIP_SUB
+	statFrame.tooltipSubtext = format(L.MELEE_GLANCE_VS_BOSS_TOOLTIP_SUB)
 	BCS:AddTooltip(statFrame)
 end
 
@@ -853,7 +854,7 @@ function BCS:SetBossDodgeChance(statFrame)
 	end
 
 	statFrame.tooltip = format(L.MELEE_DODGE_VS_BOSS_TOOLTIP)
-	statFrame.tooltipSubtext = L.MELEE_DODGE_VS_BOSS_TOOLTIP_SUB
+	statFrame.tooltipSubtext = format(L.MELEE_DODGE_VS_BOSS_TOOLTIP_SUB)
 	BCS:AddTooltip(statFrame)
 end
 
@@ -871,7 +872,7 @@ function BCS:SetBossCritCap(statFrame)
 	end
 
 	statFrame.tooltip = format(L.MELEE_CRIT_CAP_VS_BOSS_TOOLTIP)
-	statFrame.tooltipSubtext = L.MELEE_CRIT_CAP_VS_BOSS_TOOLTIP_SUB
+	statFrame.tooltipSubtext = format(L.MELEE_CRIT_CAP_VS_BOSS_TOOLTIP_SUB)
 	BCS:AddTooltip(statFrame)
 end
 
@@ -891,7 +892,7 @@ function BCS:SetEffectiveBossCrit(statFrame)
 	end
 
 	statFrame.tooltip = format(L.MELEE_EFF_CRIT_VS_BOSS_TOOLTIP)
-	statFrame.tooltipSubtext = L.MELEE_EFF_CRIT_VS_BOSS_TOOLTIP_SUB
+	statFrame.tooltipSubtext = format(L.MELEE_EFF_CRIT_VS_BOSS_TOOLTIP_SUB)
 	BCS:AddTooltip(statFrame)
 end
 
@@ -933,11 +934,10 @@ function BCS:SetSpellCritChance(statFrame)
 	if class == "WARLOCK" and spell1 > 0 then
 		-- warlock spells that can crit are all destruction so just add this to generic
 		text:SetText(format("%.2f%%", generic + spell1))
-	elseif class == "PRIEST" and spell3 > 0 and spell1 > 0 then
-		-- if priest have both talents add lowest to generic cos there will be no more spells left that can crit
-		if spell1 < spell3 then
-			text:SetText(format("%.2f%%", generic + spell1))
-		elseif spell1 >= spell3 then
+	elseif class == "PRIEST" and spell3 > 0 and spell2 > 0 then -- if priest have both talents add lowest to generic cos there will be no more spells left that can crit
+		if spell2 < spell3 then 
+			text:SetText(format("%.2f%%", generic + spell2))
+		elseif spell2 >= spell3 then
 			text:SetText(format("%.2f%%", generic + spell3))
 		end
 	end
@@ -947,6 +947,7 @@ function BCS:SetSpellCritChance(statFrame)
 		GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
 		GameTooltip:SetText(this.tooltip)
 		GameTooltip:AddLine(this.tooltipSubtext, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, 1)
+
 		if class == "DRUID" then
 			if spell1 > 0 then
 				GameTooltip:AddLine(format("Moonfire: %.2f%%", total1))
@@ -954,6 +955,7 @@ function BCS:SetSpellCritChance(statFrame)
 			if spell2 > 0 then
 				GameTooltip:AddLine(format("Regrowth: %.2f%%", total2))
 			end
+
 		elseif class == "PALADIN" then
 			if spell1 > 0 then
 				GameTooltip:AddLine(format("Holy Light: %.2f%%", total1))
@@ -964,29 +966,35 @@ function BCS:SetSpellCritChance(statFrame)
 			if spell3 > 0 then
 				GameTooltip:AddLine(format("Holy Shock: %.2f%%", total3))
 			end
+
 		elseif class == "WARLOCK" then
 			if spell2 > 0 and spell2 ~= spell1 then
 				GameTooltip:AddLine(format("Searing Pain: %.2f%%", total2))
 			end
-		elseif class == "PRIEST" then
-			-- dont show specific spells if they have same chance as offensive/healing spells
+
+		elseif class == "PRIEST" then -- all healing spells are holy, change tooltip if player have both talents
 			if spell1 > 0 then
-				GameTooltip:AddLine(format("Healing spells: %.2f%%", total1))
+				if spell3 > 0 then
+					GameTooltip:AddLine(format("Healing spells: %.2f%%", total1))
+				end
+				GameTooltip:AddLine(format("Holy spells: %.2f%%", total1 + spell3))
 			end
-			if spell2 > 0 and spell2 ~= spell1 then
-				GameTooltip:AddLine(format("Prayer of Healing: %.2f%%", total2))
+			if spell2 > 0 then
+				GameTooltip:AddLine(format("Discipline spells: %.2f%%", total2 + spell3))
 			end
 			if spell3 > 0 then
-				GameTooltip:AddLine(format("Offensive spells: %.2f%%", total3))
-			end
-			if spell4 > 0 and spell4 ~= spell3 then
+				if spell2 > 0 then
+					GameTooltip:AddLine(format("Shadow spells: %.2f%%", total3))
+				else
+					GameTooltip:AddLine(format("Offensive spells: %.2f%%", total3))
+				end
 				GameTooltip:AddLine(format("Smite: %.2f%%", total4))
 			end
-			if spell5 > 0 and spell5 ~= spell3 then
-				GameTooltip:AddLine(format("Holy Fire: %.2f%%", total5))
+			if spell4 > 0 then
+				GameTooltip:AddLine(format("Prayer of Healing: %.2f%%", total4 + spell1))
 			end
-		elseif class == "MAGE" then
-			-- dont show specific spells if they have same chance as fire spells
+
+		elseif class == "MAGE" then -- dont show specific spells if they have same chance as fire spells
 			if spell1 > 0 then
 				GameTooltip:AddLine(format("Arcane spells: %.2f%%", total1))
 			end
@@ -1005,6 +1013,7 @@ function BCS:SetSpellCritChance(statFrame)
 			if spell6 > 0 then
 				GameTooltip:AddLine(format("Frozen targets: %.2f%%", total6))
 			end
+
 		elseif class == "SHAMAN" then
 			if spell1 > 0 then
 				GameTooltip:AddLine(format("Lightning Bolt: %.2f%%", total1))
@@ -1020,7 +1029,7 @@ function BCS:SetSpellCritChance(statFrame)
 			end
 			if spell5 > 0 then
 				GameTooltip:AddLine(format("Healing spells: %.2f%%", total5))
-			end
+			end	
 		end
 		GameTooltip:Show()
 	end)
@@ -1042,12 +1051,12 @@ function BCS:SetRangedCritChance(statFrame)
 	local skill = BCS:GetRangedWeaponSkill()
 	local level = UnitLevel("player")
 	-- apply skill difference modifier
-	--[[local skillDiff = skill - (level*5)
+	local skillDiff = skill - (level*5)
 	if (skill >= (level*5)) then
 		crit = crit + (skillDiff * 0.04)
 	else
 		crit = crit + (skillDiff * 0.2)
-	end]]
+	end
 	if crit < 0 then
 		crit = 0
 	end
@@ -1062,24 +1071,38 @@ function BCS:SetHealing(statFrame)
 	local text = getglobal(statFrame:GetName() .. "StatText")
 	local label = getglobal(statFrame:GetName() .. "Label")
 
-	local power, _, _, dmg = BCS:GetSpellPower()
-	local heal, treebonus = BCS:GetHealingPower()
-	power = power - dmg
-	local total = power + heal
+	local damageAndHealing = BCS:GetSpellPower()
+	local healingOnly, treebonus, ironclad = BCS:GetHealingPower()
+	local total = damageAndHealing + healingOnly
+
 	if treebonus and aura <= treebonus then
 		total = total + treebonus
 	elseif (not treebonus and aura > 0) or (treebonus and aura > treebonus) then
 		total = total + aura
 	end
+
 	label:SetText(L.HEAL_POWER_COLON)
 	text:SetText(format("%d", total))
-	if heal ~= 0 then
-		frame.tooltip = format(L.SPELL_HEALING_POWER_SECONDARY_TOOLTIP, (total), power, heal)
+
+	if healingOnly ~= 0 then
+		frame.tooltip = format(L.SPELL_HEALING_POWER_SECONDARY_TOOLTIP, (total), damageAndHealing, healingOnly)
 	else
 		frame.tooltip = format(L.SPELL_HEALING_POWER_TOOLTIP, (total))
 	end
+	
 	frame.tooltipSubtext = format(L.SPELL_HEALING_POWER_TOOLTIP_SUB)
-	BCS:AddTooltip(frame)
+	frame:SetScript("OnEnter", function()
+		GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+		GameTooltip:SetText(this.tooltip)
+		GameTooltip:AddLine(this.tooltipSubtext, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, 1)
+		if ironclad > 0 then
+			GameTooltip:AddLine(format("Healing power from Ironclad: %d", ironclad))
+		end
+		GameTooltip:Show()
+	end)
+	frame:SetScript("OnLeave", function()
+		GameTooltip:Hide()
+	end)
 end
 
 function BCS:SetManaRegen(statFrame)
@@ -1511,7 +1534,9 @@ local function PlayerStatFrameLeftDropDown_Initialize()
 		info.value = BCS.PLAYERSTAT_DROPDOWN_OPTIONS[i]
 		info.checked = checked
 		info.owner = UIDROPDOWNMENU_OPEN_MENU
-		UIDropDownMenu_AddButton(info)
+		if not (UnitHasRelicSlot("player") and info.value == "PLAYERSTAT_RANGED_COMBAT") then
+			UIDropDownMenu_AddButton(info)
+		end
 	end
 end
 
@@ -1524,7 +1549,9 @@ local function PlayerStatFrameRightDropDown_Initialize()
 		info.value = BCS.PLAYERSTAT_DROPDOWN_OPTIONS[i]
 		info.checked = checked
 		info.owner = UIDROPDOWNMENU_OPEN_MENU
-		UIDropDownMenu_AddButton(info)
+		if not (UnitHasRelicSlot("player") and info.value == "PLAYERSTAT_RANGED_COMBAT") then
+			UIDropDownMenu_AddButton(info)
+		end
 	end
 end
 
